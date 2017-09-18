@@ -112,11 +112,11 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     for i in range(epochs):
         batch = get_batches_fn(batch_size)
         if i % 2 == 0:
-            loss = cross_entropy_loss.eval(feed_dict={input_image: batch[0],
+            loss = sess.run([cross_entropy_loss], feed_dict={input_image: batch[0],
                                                       correct_label: batch[1],
                                                       keep_prob: 1.0})
             print('step %d, training loss %g' % (i, loss))
-        train_step.run(feed_dict={input_image: batch[0],
+        sess.run([train_op], feed_dict={input_image: batch[0],
                                   correct_label: batch[1],
                                   keep_prob: 0.5,
                                   learning_rate: 1e-4})
@@ -154,7 +154,7 @@ def run():
         logits, train_op, cross_entropy_loss = optimize(output_img, correct_label, learning_rate, num_classes)
 
         # TODO: Train NN using the train_nn function
-        train_nn(sess, epochs=10, batch_size=10, get_batches_fn, train_op, cross_entropy_loss, input,
+        train_nn(sess, 10, 10, get_batches_fn, train_op, cross_entropy_loss, input,
                  correct_label, keep_prob, learning_rate)
 
         # TODO: Save inference data using helper.save_inference_samples
