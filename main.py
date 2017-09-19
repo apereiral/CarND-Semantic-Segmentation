@@ -114,17 +114,15 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
         if i % 5 == 0:
             print_loss = True
         for img_batch, label_batch in get_batches_fn(batch_size):
-        #batch = get_batches_fn(batch_size)
-        #img_batch, label_batch = next(batch[0])
             if print_loss:
                 loss = sess.run([cross_entropy_loss], feed_dict={input_image: img_batch,
                                                       correct_label: label_batch,
                                                       keep_prob: 1.0})
                 print('step ' + str(i) + ' loss: ', loss[0])
                 print_loss = False
-            sess.run([train_op], feed_dict={input_image: img_batch, \
-                                            correct_label: label_batch, \
-                                            keep_prob: 0.5, \
+            sess.run([train_op], feed_dict={input_image: img_batch,
+                                            correct_label: label_batch,
+                                            keep_prob: 0.5,
                                             learning_rate: 1e-4})
 
 tests.test_train_nn(train_nn)
@@ -153,20 +151,20 @@ def run():
         # OPTIONAL: Augment Images for better results
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
-        # TODO: Build NN using load_vgg, layers, and optimize function
+        # DONE: Build NN using load_vgg, layers, and optimize function
         input, keep_prob, layer3, layer4, layer7 = load_vgg(sess, vgg_path)
         output_img = layers(layer3, layer4, layer7, num_classes)
         correct_label = tf.placeholder(tf.float32, (None, image_shape[0], image_shape[1], num_classes))
         learning_rate = tf.placeholder(tf.float32)
         logits, train_op, cross_entropy_loss = optimize(output_img, correct_label, learning_rate, num_classes)
 
-        print('start train')
-        # TODO: Train NN using the train_nn function
+        print('Start training:')
+        # DONE: Train NN using the train_nn function
         train_nn(sess, 50, 8, get_batches_fn, train_op, cross_entropy_loss, input,
                  correct_label, keep_prob, learning_rate)
-        print('finish train')
+        print('Finish training.')
 
-        # TODO: Save inference data using helper.save_inference_samples
+        # DONE: Save inference data using helper.save_inference_samples
         helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input)
 
         # OPTIONAL: Apply the trained model to a video
