@@ -109,20 +109,25 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     # DONE: Implement function
     sess.run(tf.global_variables_initializer())
+    print_loss = False
     for i in range(epochs):
+        if i % 5 == 0:
+            print_loss = True
         for img_batch, label_batch in get_batches_fn(batch_size):
         #batch = get_batches_fn(batch_size)
         #img_batch, label_batch = next(batch[0])
-            if i % 5 == 0:
+            if print_loss:
                 loss = sess.run([cross_entropy_loss], feed_dict={input_image: img_batch,
                                                       correct_label: label_batch,
                                                       keep_prob: 1.0})
-                print(i, loss)
+                print('step ' + str(i) + ' loss: ', loss[0])
+                print_loss = False
             sess.run([train_op], feed_dict={input_image: img_batch, \
                                             correct_label: label_batch, \
                                             keep_prob: 0.5, \
                                             learning_rate: 1e-4})
-#tests.test_train_nn(train_nn)
+
+tests.test_train_nn(train_nn)
 
 
 def run():
